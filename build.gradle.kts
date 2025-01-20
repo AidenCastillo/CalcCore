@@ -3,7 +3,7 @@ plugins {
     `maven-publish`
 }
 
-group = "com.github.aidencastillo" // Replace with your GitHub username
+group = "com.github.aidencastillo.calccore" // Replace with your GitHub username
 version = "1.0.0"
 
 repositories {
@@ -12,6 +12,12 @@ repositories {
 
 dependencies {
     // Add any dependencies your library needs
+    implementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
 
 tasks.withType<Jar> {
@@ -28,6 +34,14 @@ publishing {
     repositories {
         maven {
             url = uri("https://jitpack.io")
+        }
+    }
+}
+
+sourceSets {
+    test {
+        java {
+            srcDir("src/test.java")
         }
     }
 }
