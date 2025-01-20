@@ -28,10 +28,6 @@ publishing {
     repositories {
         maven {
             url = uri("https://jitpack.io")
-            credentials {
-                username = project.findProperty("GITHUB_USERNAME") as String? ?: "" // GitHub username or "TOKEN" for JitPack
-                password = project.findProperty("GITHUB_TOKEN") as String? ?: ""
-            }
         }
     }
 }
