@@ -2,6 +2,7 @@ package com.github.aidencastillo.calccore.parser;
 
 import com.github.aidencastillo.calccore.CalcCoreException;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
@@ -25,12 +26,11 @@ public class ExpressionParser {
         Stack<String> operators = new Stack<>();
         Stack<String> output = new Stack<>();
 
-        Map<String, Integer> precedence = Map.of(
-                "+", 1,
-                "-", 1,
-                "*", 2,
-                "/", 2
-        );
+        Map<String, Integer> precedence = new HashMap<>();
+        precedence.put("+", 1);
+        precedence.put("-", 1);
+        precedence.put("*", 2);
+        precedence.put("/", 2);
 
         for (String token : tokens) {
             if (isNumeric(token)) {
