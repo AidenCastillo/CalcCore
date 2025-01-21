@@ -3,8 +3,10 @@ package com.github.aidencastillo.calccore.parser;
 import com.github.aidencastillo.calccore.CalcCore;
 import com.github.aidencastillo.calccore.CalcCoreException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -20,7 +22,34 @@ public class ExpressionParser {
     }
 
     public static String[] tokenize(String s) {
-        return s.replaceAll("\\s+", "").split("(?<=[-+*/()])|(?=[-+*/()])|(?<=[a-zA-Z])(?=[(])|(?<=[)])(?=[a-zA-Z])");
+        String[] newS = s.replaceAll("\\s+", "").split("(?<=[-+*/()])|(?=[-+*/()])|(?<=[a-zA-Z])(?=[(])|(?<=[)])(?=[a-zA-Z])");
+        // combine negative sign with number or function if necessary
+        for (int i = 0; i < newS.length; i++) {
+            if (newS[i].equals("-") && (i == 0 || newS[i - 1].equals("(") || newS[i - 1].equals("+") || newS[i - 1].equals("-") || newS[i - 1].equals("*") || newS[i - 1].equals("/"))) {
+                if (i + 1 < newS.length && Character.isLetter(newS[i + 1].charAt(0))) {
+                    newS[i] = "-1*";
+                } else {
+                    newS[i + 1] = newS[i] + newS[i + 1];
+                    newS[i] = "";
+                }
+            }
+        }
+        // remove empty strings
+        newS = java.util.Arrays.stream(newS).filter(s1 -> !s1.isEmpty()).toArray(String[]::new);
+
+        // further split the combined "-1*function" into ["-1", "*", "function"]
+        List<String> finalTokens = new ArrayList<>();
+        for (String token : newS) {
+            if (token.startsWith("-1*")) {
+                finalTokens.add("-1");
+                finalTokens.add("*");
+                finalTokens.add(token.substring(3));
+            } else {
+                finalTokens.add(token);
+            }
+        }
+
+        return finalTokens.toArray(new String[0]);
     }
 
     public static String[] toRPN(String[] tokens) throws CalcCoreException {
