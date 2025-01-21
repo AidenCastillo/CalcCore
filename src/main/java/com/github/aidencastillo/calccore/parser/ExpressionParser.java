@@ -4,7 +4,9 @@ import com.github.aidencastillo.calccore.CalcCore;
 import com.github.aidencastillo.calccore.CalcCoreException;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 
 public class ExpressionParser {
@@ -28,10 +30,14 @@ public class ExpressionParser {
         Stack<String> output = new Stack<>();
 
         Map<String, Integer> precedence = new HashMap<>();
+        Set<String> rightAssociative = new HashSet<>();
+
         precedence.put("+", 1);
         precedence.put("-", 1);
         precedence.put("*", 2);
         precedence.put("/", 2);
+        precedence.put("^", 3);
+        rightAssociative.add("^");
 
         for (String token : tokens) {
             if (isNumeric(token)) {
@@ -50,6 +56,7 @@ public class ExpressionParser {
                     output.push(operators.pop());
                 }
                 operators.pop();
+                output.push(operators.pop());
             } else if (isFunction(token)) {
                 operators.push(token);
             }

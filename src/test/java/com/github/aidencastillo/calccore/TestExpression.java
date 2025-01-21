@@ -37,9 +37,12 @@ public class TestExpression {
         Expression expression2 = new Expression("cos(0)");
         Expression expression3 = new Expression("tan(0)");
 
+        Function f = new Function("f(x) = sin(x)+3");
+        Expression expression4 = new Expression("f(0)", f);
 
         assertEquals(0.0, expression.evaluate(), 1e-9);
         assertEquals(1.0, expression2.evaluate(), 1e-9);
         assertEquals(0.0, expression3.evaluate(), 1e-9);
+        assertEquals(3.0, expression4.evaluate(), 1e-9);
     }
 }
