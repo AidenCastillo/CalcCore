@@ -1,5 +1,6 @@
 package com.github.aidencastillo.calccore.parser;
 
+import com.github.aidencastillo.calccore.CalcCore;
 import com.github.aidencastillo.calccore.CalcCoreException;
 
 import java.util.HashMap;
@@ -17,7 +18,7 @@ public class ExpressionParser {
     }
 
     public static String[] tokenize(String s) {
-        return s.replaceAll("\\s+", "").split("(?<=[-+*/()])|(?=[-+*/()])");
+        return s.replaceAll("\\s+", "").split("(?<=[-+*/()])|(?=[-+*/()])|(?<=[a-zA-Z])(?=[(])|(?<=[)])(?=[a-zA-Z])");
     }
 
     public static String[] toRPN(String[] tokens) throws CalcCoreException {
@@ -49,6 +50,8 @@ public class ExpressionParser {
                     output.push(operators.pop());
                 }
                 operators.pop();
+            } else if (isFunction(token)) {
+                operators.push(token);
             }
         }
 
@@ -63,6 +66,9 @@ public class ExpressionParser {
         return output.toArray(new String[0]);
     }
 
+    public static boolean isFunction(String token) {
+        return CalcCore.getFunctions().containsKey(token);
+    }
 
     public static boolean isNumeric(String token) {
         try {
